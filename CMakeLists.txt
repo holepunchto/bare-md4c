@@ -26,5 +26,5 @@ target_link_libraries(
 target_include_directories(
   ${bare_md4c}
   PRIVATE
-    "$MD4C_DIR/src"
+    ${MD4C_DIR}/src
 )
