@@ -1,0 +1,39 @@
+{
+  "private": true,
+  "name": "bare-md4c",
+  "version": "1.0.0",
+  "description": "MD4C bindings, markdown push parser",
+  "exports": {
+    "./package": "./package.json",
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "binding.c",
+    "binding.js",
+    "CMakeLists.txt",
+    "prebuilds"
+  ],
+  "addon": true,
+  "scripts": {
+    "test": "prettier . --check --ignore-path fixture.md && bare test.js",
+    "format": "prettier . --write --ignore-path fixture.md && clang-format -i binding.cc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holepunchto/bare-addon.git"
+  },
+  "author": "Holepunch",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/holepunchto/bare-addon/issues"
+  },
+  "homepage": "https://github.com/holepunchto/bare-addon#readme",
+  "devDependencies": {
+    "brittle": "^3.4.0",
+    "cmake-bare": "^1.1.2",
+    "cmake-fetch": "^1.4.7",
+    "prettier": "^3.3.3",
+    "prettier-config-standard": "^7.0.0"
+  }
+}
