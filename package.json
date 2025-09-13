@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "bare-md4c",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "MD4C bindings, markdown push parser",
   "exports": {
     "./package": "./package.json",
