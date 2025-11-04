@@ -15,3 +15,14 @@ test('parses commonmark spec', (t) => {
     return 0
   }
 })
+
+const htmlFixture = `
+# Hello World
+
+welcome to planet.
+`.trim()
+
+test('generates html', (t) => {
+  const html = md4c.toHTML(htmlFixture)
+  t.is(html, '<h1>Hello World</h1>\n<p>welcome to planet.</p>\n')
+})

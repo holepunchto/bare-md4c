@@ -12,6 +12,22 @@ npm i bare-md4c
 import md4c from 'bare-md4c'
 ```
 
+### `md4c.toHTML(input, flags, htmlFlags)`
+
+Convert markdown to html
+
+Example:
+
+```js
+const html = md4c.toHTML(mdText)
+```
+
+Parameters:
+
+- `input` - markdown string
+- `flags` - any combination of `md4c.constants.flags`, default: `DIALECT_GITHUB`
+- `htmlFlags` - any combination of `md4c.constants.htmlFlags`, default: none
+
 ### `md4c.parse(input, onparse, flags, logDebug = false)`
 
 Parse text `input`.

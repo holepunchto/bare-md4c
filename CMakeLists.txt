@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 4.0)
 find_package(cmake-bare REQUIRED PATHS node_modules/cmake-bare)
 find_package(cmake-fetch REQUIRED PATHS node_modules/cmake-fetch)
 
-project(bare_md4c CXX C)
+project(bare_md4c C CXX)
 
 fetch_package("github:mity/md4c#481fbfb" SOURCE_DIR MD4C_DIR)
 fetch_package("github:holepunchto/libjstl#34a7894")
@@ -20,6 +20,7 @@ target_link_libraries(
   ${bare_md4c}
   PRIVATE
     $<TARGET_OBJECTS:md4c>
+    $<TARGET_OBJECTS:md4c-html>
     jstl
 )
 

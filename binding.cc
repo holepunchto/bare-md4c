@@ -3,13 +3,20 @@
 #include <js.h>
 #include <jstl.h>
 #include <md4c.h>
+#include <md4c-html.h>
 #include <utf.h>
 
 using bare_md4c_onpush_t = js_function_t<int, int, int, std::optional<std::string>, std::optional<js_object_t>>;
+using bare_md4c_onchunk_t = js_function_t<void, std::string>;
 
 struct bare_md4c_t {
   js_env_t *env;
   bare_md4c_onpush_t &onpush;
+};
+
+struct bare_md4c_html_t {
+  js_env_t *env;
+  bare_md4c_onchunk_t &onwrite;
 };
 
 enum bare_md4c_event_t {
@@ -69,6 +76,9 @@ bare_md4c_marshall_mdblock_detail(js_env_t *env, MD_BLOCKTYPE type, void *detail
   case MD_BLOCK_P:
   case MD_BLOCK_HR:
   case MD_BLOCK_QUOTE:
+  case MD_BLOCK_THEAD:
+  case MD_BLOCK_TBODY:
+  case MD_BLOCK_TR:
     break;
 
     // blocks with specified details
@@ -142,6 +152,7 @@ bare_md4c_marshall_mdblock_detail(js_env_t *env, MD_BLOCKTYPE type, void *detail
     if (err < 0) return err;
   } break;
 
+  case MD_BLOCK_TH:
   case MD_BLOCK_TD: {
     auto td = reinterpret_cast<MD_BLOCK_TD_DETAIL *>(detail);
 
@@ -359,6 +370,29 @@ bare_md4c_parse(js_env_t *env, std::string md, bare_md4c_onpush_t handler, uint3
   return md_parse(md.c_str(), md.length(), &parser, &ctx);
 }
 
+static void
+on_process_output(const MD_CHAR *chunk, MD_SIZE len, void *userptr) {
+  auto ctx = reinterpret_cast<bare_md4c_html_t *>(userptr);
+
+  int err = js_call_function<>(ctx->env, ctx->onwrite, std::string(chunk, len));
+  assert(err == 0);
+}
+
+static int
+bare_md4c_to_html(
+  js_env_t *env,
+  std::string md,
+  bare_md4c_onchunk_t handler,
+  uint32_t parser_flags,
+  uint32_t renderer_flags
+) {
+  bare_md4c_html_t ctx = {
+    .env = env,
+    .onwrite = handler
+  };
+  return md_html(md.c_str(), md.length(), on_process_output, &ctx, parser_flags, renderer_flags);
+}
+
 static js_value_t *
 bare_md4c_exports(js_env_t *env, js_value_t *exports) {
   int err;
@@ -369,6 +403,7 @@ bare_md4c_exports(js_env_t *env, js_value_t *exports) {
   assert(err == 0);
 
   V("parse", bare_md4c_parse)
+  V("toHTML", bare_md4c_to_html)
 
 #undef V
 
@@ -457,6 +492,13 @@ bare_md4c_exports(js_env_t *env, js_value_t *exports) {
   V(EV_SPAN_ENTER)
   V(EV_SPAN_LEAVE)
   V(EV_TEXT)
+
+  // md4c-html renderer
+
+  V(MD_HTML_FLAG_DEBUG)
+  V(MD_HTML_FLAG_VERBATIM_ENTITIES)
+  V(MD_HTML_FLAG_SKIP_UTF8_BOM)
+  V(MD_HTML_FLAG_XHTML)
 
 #undef V
   return exports;

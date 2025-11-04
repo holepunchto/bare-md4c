@@ -6,6 +6,24 @@ exports.parse = function parse(input, onparse, flags = binding.MD_DIALECT_GITHUB
   if (err) throw new Error('parse error')
 }
 
+exports.toHTML = function toHTML(
+  input,
+  parserFlags = binding.MD_DIALECT_GITHUB,
+  htmlFlags = 0
+) {
+  let html = ''
+
+  function onwrite (chunk) {
+    html += chunk
+  }
+
+  const res = binding.toHTML(input, onwrite, parserFlags, htmlFlags)
+
+  if (res < 0) throw new Error('Markdown conversion failed')
+
+  return html
+}
+
 exports.constants = {
   events: {
     BLOCK_ENTER: binding.EV_BLOCK_ENTER,
@@ -87,5 +105,12 @@ exports.constants = {
     LEFT: binding.MD_ALIGN_LEFT,
     CENTER: binding.MD_ALIGN_CENTER,
     RIGHT: binding.MD_ALIGN_RIGHT
+  },
+
+  htmlFlags: {
+    DEBUG: binding.MD_HTML_FLAG_DEBUG,
+    VERBATIM_ENTITIES: binding.MD_HTML_FLAG_VERBATIM_ENTITIES,
+    SKIP_UTF8_BOM: binding.MD_HTML_FLAG_SKIP_UTF8_BOM,
+    XHTML: binding.MD_HTML_FLAG_XHTML
   }
 }
