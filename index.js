@@ -1,19 +1,20 @@
 const binding = require('./binding')
 
-exports.parse = function parse(input, onparse, flags = binding.MD_DIALECT_GITHUB, logDebug = false) {
+exports.parse = function parse(
+  input,
+  onparse,
+  flags = binding.MD_DIALECT_GITHUB,
+  logDebug = false
+) {
   const err = binding.parse(input, onparse, flags, logDebug)
 
   if (err) throw new Error('parse error')
 }
 
-exports.toHTML = function toHTML(
-  input,
-  parserFlags = binding.MD_DIALECT_GITHUB,
-  htmlFlags = 0
-) {
+exports.toHTML = function toHTML(input, parserFlags = binding.MD_DIALECT_GITHUB, htmlFlags = 0) {
   let html = ''
 
-  function onwrite (chunk) {
+  function onwrite(chunk) {
     html += chunk
   }
 

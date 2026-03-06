@@ -42,9 +42,9 @@ function onpush(event, tag, text, details) {
   const { events, block, span, text } = md4c.constants
 
   console.log(
-    event,  // value in `events`
-    tag,    // value in `block|span|text`
-    text,   // the message (`undefined` on non `events.TEXT` events)
+    event, // value in `events`
+    tag, // value in `block|span|text`
+    text, // the message (`undefined` on non `events.TEXT` events)
     details // tag details (header level, link href)
   )
 
