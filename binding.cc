@@ -47,18 +47,15 @@ bare_md4c_marshall_mdattribute(js_env_t *env, js_object_t &target, const std::st
   err = js_set_property(env, obj, "text", std::string(attr.text, attr.size));
   if (err < 0) return err;
 
-  std::vector<std::tuple<int, int>> substrings;
-  substrings.reserve(attr.size);
-
-  assert(attr.substr_offsets[0] == 0);
+  js_array_t array;
+  err = js_create_array(env, array);
+  if (err < 0) return err;
 
   for (int i = 0; attr.substr_offsets[i] != attr.size; i++) {
-    substrings.emplace_back(attr.substr_types[i], attr.substr_offsets[i]);
+    auto ta = std::tuple<int, int>(attr.substr_types[i], attr.substr_offsets[i]);
+    err = js_set_element(env, array , i, ta);
+    if (err < 0) return err;
   }
-
-  js_array_t array;
-  err = js_create_array(env, substrings, array);
-  if (err < 0) return err;
 
   err = js_set_property(env, obj, "substrings", array);
   if (err < 0) return err;

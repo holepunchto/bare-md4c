@@ -11,7 +11,7 @@ test('parses commonmark spec', (t) => {
 
   function onpush(event, tag, text, details) {
     events++
-
+    console.log(JSON.stringify({event, tag, text, details}))
     return 0
   }
 })
