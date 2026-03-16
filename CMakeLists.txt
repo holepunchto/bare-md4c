@@ -6,7 +6,7 @@ find_package(cmake-fetch REQUIRED PATHS node_modules/cmake-fetch)
 project(bare_md4c CXX C)
 
 fetch_package("github:mity/md4c#481fbfb" SOURCE_DIR MD4C_DIR)
-fetch_package("github:holepunchto/libjstl#34a7894")
+fetch_package("github:holepunchto/libjstl#ecd945a")
 
 add_bare_module(bare_md4c)
 
